@@ -1,0 +1,21 @@
+{
+  "name": "epii/curl",
+  "description": "php curl",
+  "authors": [
+    {
+      "name": "MrRen Epii",
+      "email": "543169072@qq.com"
+    }
+  ],
+  "license": "MIT",
+  "require": {
+    "php": ">=7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "epii\\curl\\": "src/",
+      "Curl\\": "libs/Curl",
+      "htmldom\\": "libs/htmldom"
+    }
+  }
+}
