@@ -185,7 +185,7 @@ class Client
         return $this;
     }
 
-    public function submitFormInHtmlGetPostData(String $htmlString)
+    public function submitFormInHtmlGetPostData(String $htmlString,$tags=["input"])
     {
         $html = new simple_html_dom();
         $html->load($htmlString);
@@ -198,11 +198,20 @@ class Client
 
             if (!$me) $me = "post";
             $data = [];
-            foreach ($html->find('input') as $item) {
 
-                $data[$item->name] = $item->value;
+            foreach ($tags as $tag)
+            {
+                foreach ($html->find($tag) as $item) {
 
+                    if($tag=="select")
+                    {
+                        $data[$item->name] =  $item->find('option[selected]',0)->value;
+                    }else
+                        $data[$item->name] = $item->value;
+
+                }
             }
+
             return [$action, $data];
 
         }
