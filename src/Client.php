@@ -206,6 +206,11 @@ class Client
                     if($tag=="select")
                     {
                         $data[$item->name] =  $item->find('option[selected]',0)->value;
+                        if ($data[$item->name] ===null)
+                        {
+
+                            $data[$item->name] = $item->value;
+                        }
                     }else
                         $data[$item->name] = $item->value;
 
