@@ -27,6 +27,9 @@ class Client
     private $last_response;
 
     private $runing_data = array();
+    /*
+     * IListener
+     */
     private $curlGlobal = null;
 
     public function saveRuingData($file)
@@ -114,7 +117,7 @@ class Client
 
     }
 
-    public function doPost($url, Array $args = [], IGetData $callback = null)
+    public function doPost($url, $args = [], IGetData $callback = null)
     {
         return $this->doRun(new class($url, $args) implements IRun
         {
@@ -138,6 +141,15 @@ class Client
                 // TODO: Implement check() method.
             }
         }, [], $callback);
+    }
+
+
+    /**
+     * @return Curl
+     */
+    public function getNewCurl()
+    {
+        return $this->curlGlobal->getCurl();
     }
 
     public function doRun($run, Array $args = [], IGetData $callback = null)
@@ -185,13 +197,13 @@ class Client
         return $this;
     }
 
-    public function submitFormInHtmlGetPostData(String $htmlString,$tags=["input"])
+    public function submitFormInHtmlGetPostData(String $htmlString, $tags = ["input"], $tag = "form")
     {
         $html = new simple_html_dom();
         $html->load($htmlString);
         //var_export($html->find("form")->plaintext);
 
-        foreach ($html->find('form') as $element) {
+        foreach ($html->find($tag) as $element) {
             $action = $element->action;
 
             $me = strtolower($element->method);
@@ -199,19 +211,16 @@ class Client
             if (!$me) $me = "post";
             $data = [];
 
-            foreach ($tags as $tag)
-            {
+            foreach ($tags as $tag) {
                 foreach ($html->find($tag) as $item) {
 
-                    if($tag=="select")
-                    {
-                        $data[$item->name] =  $item->find('option[selected]',0)->value;
-                        if ($data[$item->name] ===null)
-                        {
+                    if ($tag == "select") {
+                        $data[$item->name] = $item->find('option[selected]', 0)->value;
+                        if ($data[$item->name] === null) {
 
                             $data[$item->name] = $item->value;
                         }
-                    }else
+                    } else
                         $data[$item->name] = $item->value;
 
                 }
