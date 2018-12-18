@@ -51,6 +51,7 @@ class ClientListener implements IListener
         foreach ($n_cookie as $k => $v) {
             $cookies[$k] = $v;
         }
+        if ($n_cookie)
         $this->setCookie($cookies);
 
     }
