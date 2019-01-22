@@ -27,6 +27,9 @@ class Client
     private $last_response;
 
     private $runing_data = array();
+
+    private $_setRuningDataLocalCache_tag = false;
+    private $_setRuningDataLocalCache_file = false;
     /*
      * IListener
      */
@@ -35,6 +38,18 @@ class Client
     public function saveRuingData($file)
     {
         file_put_contents($file, json_encode($this->runing_data));
+        return $this;
+    }
+
+    public function saveRuingCacheDataFile($file)
+    {
+        $this->_setRuningDataLocalCache_file = $file;
+
+        $dir = pathinfo($this->_setRuningDataLocalCache_file, PATHINFO_DIRNAME);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
         return $this;
     }
 
@@ -53,6 +68,28 @@ class Client
         }
 
         return $this;
+    }
+
+    public function setRuningDataLocalCache(string $key, $value)
+    {
+        $this->setRuningData($key, $value);
+        if ($this->_setRuningDataLocalCache_tag === false) {
+            $this->_setRuningDataLocalCache_tag = [];
+        }
+        $this->_setRuningDataLocalCache_tag[$key] = $value;
+        return $this;
+    }
+
+    public function __destruct()
+    {
+        // TODO: Implement __destruct() method.
+        if ($this->_setRuningDataLocalCache_tag !== false) {
+           if ($this->_setRuningDataLocalCache_file)
+           {
+               file_put_contents($this->_setRuningDataLocalCache_file, json_encode($this->_setRuningDataLocalCache_tag ,JSON_UNESCAPED_UNICODE));
+           }
+        }
+
     }
 
     public function getRuningData($key)
