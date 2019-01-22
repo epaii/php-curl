@@ -41,7 +41,7 @@ class Client
         return $this;
     }
 
-    public function saveRuingCacheDataFile($file)
+    public function setRuingCacheDataFile($file)
     {
         $this->_setRuningDataLocalCache_file = $file;
 
@@ -49,6 +49,17 @@ class Client
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
+
+        if (is_file($this->_setRuningDataLocalCache_file ))
+        {
+            $r_data = json_decode(file_get_contents($this->_setRuningDataLocalCache_file ),true);
+            if ($r_data)
+            {
+                $this->setRuningData($r_data);
+            }
+        }
+
+
 
         return $this;
     }
