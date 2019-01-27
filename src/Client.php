@@ -233,6 +233,15 @@ class Client
             $this->last_response = $curl->response;
             $this->log($curl);
             $this->curlGlobal->whenDone($curl);
+
+
+            $info = $curl->getInfo();
+            if (isset($info["redirect_url"]) && $info["redirect_url"]) {
+
+                $this->doGet($info["redirect_url"]);
+                return $this;
+            }
+
             if ($run instanceof IRunDone) {
                 $run->done($curl, $args, $this);
             }
