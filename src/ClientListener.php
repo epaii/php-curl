@@ -69,7 +69,15 @@ class ClientListener implements IListener
 
         if (file_exists($file = $this->getCookieFile($curl->url))) {
             if ($cookie = json_decode(file_get_contents($file), true))
+            {
+                foreach ($cookie as $key=>$value)
+                {
+                    $cookie[$key] = urldecode($value);
+                }
                 $curl->setCookies($cookie);
+
+            }
+
         }
     }
 

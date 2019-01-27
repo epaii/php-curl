@@ -303,7 +303,7 @@ class Curl
         $this->setOpt(CURLOPT_FILE, $this->fileHandle);
         $this->get($url);
 
-        return ! $this->error;
+        return !$this->error;
     }
 
     /**
@@ -358,7 +358,7 @@ class Curl
         if ($this->curlError && function_exists('curl_strerror')) {
             $this->curlErrorMessage =
                 curl_strerror($this->curlErrorCode) . (
-                    empty($this->curlErrorMessage) ? '' : ': ' . $this->curlErrorMessage
+                empty($this->curlErrorMessage) ? '' : ': ' . $this->curlErrorMessage
                 );
         }
 
@@ -698,11 +698,13 @@ class Curl
         $this->setEncodedCookie($key, $value);
         $this->buildCookies();
     }
+
     public function clearCookie()
     {
-       $this->cookies=[];
+        $this->cookies = [];
         $this->buildCookies();
     }
+
     /**
      * Set Cookies
      *
@@ -1445,7 +1447,7 @@ class Curl
     private function parseResponseHeaders($raw_response_headers)
     {
         $response_header_array = explode("\r\n\r\n", $raw_response_headers);
-        $response_header  = '';
+        $response_header = '';
         for ($i = count($response_header_array) - 1; $i >= 0; $i--) {
             if (stripos($response_header_array[$i], 'HTTP/') === 0) {
                 $response_header = $response_header_array[$i];
@@ -1471,25 +1473,26 @@ class Curl
      */
     private function setEncodedCookie($key, $value)
     {
-        $name_chars = array();
-        foreach (str_split($key) as $name_char) {
-            if (isset($this->rfc2616[$name_char])) {
-                $name_chars[] = $name_char;
-            } else {
-                $name_chars[] = rawurlencode($name_char);
-            }
-        }
-
-        $value_chars = array();
-        foreach (str_split($value) as $value_char) {
-            if (isset($this->rfc6265[$value_char])) {
-                $value_chars[] = $value_char;
-            } else {
-                $value_chars[] = rawurlencode($value_char);
-            }
-        }
-
-        $this->cookies[implode('', $name_chars)] = implode('', $value_chars);
+//        $name_chars = array();
+//        foreach (str_split($key) as $name_char) {
+//            if (isset($this->rfc2616[$name_char])) {
+//                $name_chars[] = $name_char;
+//            } else {
+//                $name_chars[] = rawurlencode($name_char);
+//            }
+//        }
+//
+//        $value_chars = array();
+//        foreach (str_split($value) as $value_char) {
+//            if (isset($this->rfc6265[$value_char])) {
+//                $value_chars[] = $value_char;
+//            } else {
+//                $value_chars[] = rawurlencode($value_char);
+//            }
+//        }
+//
+//        $this->cookies[implode('', $name_chars)] = implode('', $value_chars);
+        $this->cookies[$key] = $value;
     }
 
     /**
@@ -1529,7 +1532,8 @@ class Curl
  *
  * @return callable
  */
-function createHeaderCallback($header_callback_data) {
+function createHeaderCallback($header_callback_data)
+{
     return function ($ch, $header) use ($header_callback_data) {
         if (preg_match('/^Set-Cookie:\s*([^=]+)=([^;]+)/mi', $header, $cookie) === 1) {
             $header_callback_data->responseCookies[$cookie[1]] = trim($cookie[2], " \n\r\t\0\x0B");
