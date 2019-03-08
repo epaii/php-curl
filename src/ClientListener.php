@@ -16,6 +16,14 @@ class ClientListener implements IListener
     private $cookie_file = null;
 
 
+    private $cookie_function = null;
+
+    public function setCookieGetFunction(callable $cookie_function)
+    {
+        $this->cookie_function = $cookie_function;
+    }
+
+
     public function __construct($cookir_file)
     {
         $this->cookie_file = $cookir_file;
@@ -68,11 +76,9 @@ class ClientListener implements IListener
     {
 
         if (file_exists($file = $this->getCookieFile($curl->url))) {
-            if ($cookie = json_decode(file_get_contents($file), true))
-            {
-                foreach ($cookie as $key=>$value)
-                {
-                    $cookie[$key] = urldecode($value);
+            if ($cookie = json_decode(file_get_contents($file), true)) {
+                foreach ($cookie as $key => $value) {
+                    $cookie[$key] = $this->cookie_function ? call_user_func($this->cookie_function, $value) : $value;
                 }
                 $curl->setCookies($cookie);
 
