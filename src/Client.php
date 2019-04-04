@@ -272,11 +272,14 @@ class Client
                 foreach ($html->find($tag) as $item) {
 
                     if ($tag == "select") {
-                        $data[$item->name] = $item->find('option[selected]', 0)->value;
-                        if ($data[$item->name] === null) {
-
+                        if ($dom_tag = $item->find('option[selected]', 0))
+                        {
+                            $data[$item->name] = $dom_tag->value;
+                        }else{
                             $data[$item->name] = $item->value;
                         }
+
+
                     } else
                         $data[$item->name] = $item->value;
 
