@@ -269,7 +269,7 @@ class Client
             $data = [];
 
             foreach ($tags as $tag) {
-                foreach ($html->find($tag) as $item) {
+                foreach ($element->find($tag) as $item) {
 
                     if ($tag == "select") {
                         if ($dom_tag = $item->find('option[selected]', 0))
