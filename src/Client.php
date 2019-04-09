@@ -275,6 +275,9 @@ class Client
                         if ($dom_tag = $item->find('option[selected]', 0))
                         {
                             $data[$item->name] = $dom_tag->value;
+                        }else  if ($dom_tag =  $item->firstChild()){
+                            //   var_dump($item->name);
+                            $data[$item->name] = $dom_tag->value;
                         }else{
                             $data[$item->name] = $item->value;
                         }
