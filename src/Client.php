@@ -20,6 +20,7 @@ use htmldom\simple_html_dom;
 class Client
 {
 
+
     private $can_next = true;
 
     private $debug = false;
@@ -30,10 +31,26 @@ class Client
 
     private $_setRuningDataLocalCache_tag = false;
     private $_setRuningDataLocalCache_file = false;
-    /*
-     * IListener
+    /**
+     * @var IListener
      */
     private $curlGlobal = null;
+
+    /**
+     * @var Client
+     */
+    private static $client;
+
+    public function __construct()
+    {
+        self::$client = $this;
+    }
+
+    public static function getWorkingClient(): Client
+    {
+        return self::$client;
+    }
+
 
     public function saveRuingData($file)
     {
@@ -50,15 +67,12 @@ class Client
             mkdir($dir, 0777, true);
         }
 
-        if (is_file($this->_setRuningDataLocalCache_file ))
-        {
-            $r_data = json_decode(file_get_contents($this->_setRuningDataLocalCache_file ),true);
-            if ($r_data)
-            {
+        if (is_file($this->_setRuningDataLocalCache_file)) {
+            $r_data = json_decode(file_get_contents($this->_setRuningDataLocalCache_file), true);
+            if ($r_data) {
                 $this->setRuningData($r_data);
             }
         }
-
 
 
         return $this;
@@ -95,10 +109,9 @@ class Client
     {
         // TODO: Implement __destruct() method.
         if ($this->_setRuningDataLocalCache_tag !== false) {
-           if ($this->_setRuningDataLocalCache_file)
-           {
-               file_put_contents($this->_setRuningDataLocalCache_file, json_encode($this->_setRuningDataLocalCache_tag ,JSON_UNESCAPED_UNICODE));
-           }
+            if ($this->_setRuningDataLocalCache_file) {
+                file_put_contents($this->_setRuningDataLocalCache_file, json_encode($this->_setRuningDataLocalCache_tag, JSON_UNESCAPED_UNICODE));
+            }
         }
 
     }
@@ -200,6 +213,16 @@ class Client
         return $this->curlGlobal->getCurl();
     }
 
+
+    public function doWidthCurl(callable $function)
+    {
+        $curl = $this->curlGlobal->getCurl();
+        $out = $function($curl);
+        $this->log($curl);
+        $this->curlGlobal->whenDone($curl);
+        return $out;
+    }
+
     public function doRun($run, Array $args = [], IGetData $callback = null)
     {
 
@@ -272,13 +295,12 @@ class Client
                 foreach ($element->find($tag) as $item) {
 
                     if ($tag == "select") {
-                        if ($dom_tag = $item->find('option[selected]', 0))
-                        {
+                        if ($dom_tag = $item->find('option[selected]', 0)) {
                             $data[$item->name] = $dom_tag->value;
-                        }else  if ($dom_tag =  $item->firstChild()){
+                        } else if ($dom_tag = $item->firstChild()) {
                             //   var_dump($item->name);
                             $data[$item->name] = $dom_tag->value;
-                        }else{
+                        } else {
                             $data[$item->name] = $item->value;
                         }
 
