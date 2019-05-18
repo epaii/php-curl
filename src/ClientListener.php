@@ -102,4 +102,18 @@ class ClientListener implements IListener
         }
         return $file;
     }
+    public function getCookieInfo($url)
+    {
+        if (file_exists($file = $this->getCookieFile($url))) {
+            if ($cookie = json_decode(file_get_contents($file), true)) {
+                foreach ($cookie as $key => $value) {
+                    $cookie[$key] = $this->cookie_function ? call_user_func($this->cookie_function, $value) : $value;
+                }
+                return $cookie;
+
+            }
+
+        }
+        return [];
+    }
 }

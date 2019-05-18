@@ -16,4 +16,5 @@ interface IListener
     public function getCurl();
     public function whenDone(Curl $curl);
     public function beforExec(Curl $curl);
+    public function getCookieInfo($url);
 }

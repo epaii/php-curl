@@ -16,7 +16,6 @@ use epii\curl\run\IRun;
 use epii\curl\run\IRunDone;
 use htmldom\simple_html_dom;
 
-
 class Client
 {
 
