@@ -34,7 +34,10 @@ class Client
      * @var IListener
      */
     private $curlGlobal = null;
-
+    public function getListener(): IListener
+    {
+        return $this->curlGlobal;
+    }
     /**
      * @var Client
      */
