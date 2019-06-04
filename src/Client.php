@@ -294,6 +294,7 @@ class Client
             $data = [];
 
             foreach ($tags as $tag) {
+
                 foreach ($element->find($tag) as $item) {
 
                     if ($tag == "select") {
@@ -305,8 +306,9 @@ class Client
                         } else {
                             $data[$item->name] = $item->value;
                         }
+                    }else if ($tag == "textarea") {
 
-
+                        $data[$item->name] = $item->innertext;
                     } else
                         $data[$item->name] = $item->value;
 
