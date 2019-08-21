@@ -34,10 +34,12 @@ class Client
      * @var IListener
      */
     private $curlGlobal = null;
+
     public function getListener(): IListener
     {
         return $this->curlGlobal;
     }
+
     /**
      * @var Client
      */
@@ -96,6 +98,12 @@ class Client
 
         return $this;
     }
+
+    public function editRuningData(string $name, callable $fun)
+    {
+        $this->setRuningData($name, $fun($this->getRuningData($name)));
+    }
+
 
     public function setRuningDataLocalCache(string $key, $value)
     {
@@ -306,7 +314,7 @@ class Client
                         } else {
                             $data[$item->name] = $item->value;
                         }
-                    }else if ($tag == "textarea") {
+                    } else if ($tag == "textarea") {
 
                         $data[$item->name] = $item->innertext;
                     } else
