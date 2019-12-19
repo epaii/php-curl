@@ -214,7 +214,17 @@ class Client
         }, [], $callback);
     }
 
+    public function doPostJson($url,   $args)
+    {
+        return $this->doWidthCurl(function (EpiiCurl $curl) use ($url, $args) {
+            $curl->setHeader("Content-Type", "application/json;charset=UTF-8");
+            $curl->setHeader("Accept", "application/json, text/plain, */*");
+            $curl->post($url, $args);
+            $this->last_response = $curl->response;
+            return  $this->last_response;
 
+        });
+    }
     /**
      * @return Curl
      */
